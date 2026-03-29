@@ -37,15 +37,15 @@ class Exit(GameState):
             surf,
             False,
         )
-        
+
     def force_game_reset(self):
         if g_engine.score > g_engine.high_score:
             g_engine.high_score = g_engine.score
             save_high_score(g_engine.high_score)
-        
+
         if g_engine.player:
             g_engine.player.setLife(0)
-            
+
         self.next_state = "Menu"
         self.done = True
 
@@ -161,7 +161,7 @@ class GameOver(GameState):
             if event.button == 0:
                 pygame.mixer.Sound.play(g_engine.assets.get_sound("menu_confirm"))
                 if self.selected == 0:
-                    self.foce_game_reset()
+                    self.force_game_reset()
                     self.done = True
                 elif self.selected == 1:
                     self.next_state = "Exit"
