@@ -1,15 +1,17 @@
-import pygame
+import os
 import sys
+import pygame
 from pathlib import Path
 
 from constants.Utils import create_glow_surface
+from constants.global_var import PLAYER_COLOR_GREEN, TITLE_YELLOW_1
 from constants.global_var import PLAYER_COLOR_GREEN, TITLE_YELLOW_1
 
 
 def get_assets_dir():
     if getattr(sys, "frozen", False):
-        return Path(sys._MEIPASS) / "assets"
-    return Path(__file__).resolve().parent
+        return Path(sys.executable).resolve().parent / "assets"
+    return Path(__file__).resolve().parents[1] / "assets"
 
 
 ASSET_DIR = get_assets_dir()
@@ -81,8 +83,16 @@ class AssetManager:
         self.sounds['hit'] = self._load_sound(p('sound/hit.mp3'))
         self.sounds['menu_select'] = self._load_sound(p('sound/impactMetal_002.ogg'))
         self.sounds['menu_confirm'] = self._load_sound(p('sound/forceField_001.mp3'))
+        self.sounds['wah-parry'] = self._load_sound(p('sound/wah-parry.mp3'))
+        self.sounds['power-up'] = self._load_sound(p('sound/Power-up.mp3'))
 
-        self.sounds['music'] = str(self._resolve_path(p('sound/victory.mp3')))
+        self.music_tracks = []
+        music_dir = ASSET_DIR / "sound" / "music"
+        
+        if music_dir.exists():
+            for file in music_dir.glob("*.mp3"):
+                self.music_tracks.append(str(file))
+        
 
     def _load_fonts(self):
         p = Path
@@ -138,4 +148,6 @@ class AssetManager:
     def _generate_glows(self):
         self.images['glow_bullet_player'] = create_glow_surface(25, (255, 0, 255))
         self.images['glow_bullet_enemy'] = create_glow_surface(25, TITLE_YELLOW_1)
+        self.images['glow_bullet_pink'] = create_glow_surface(25, (220, 88, 176))
         self.images['glow_player'] = create_glow_surface(45, PLAYER_COLOR_GREEN)
+        self.images['glow_absorb'] = create_glow_surface(55, (255, 50, 150))
